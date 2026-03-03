@@ -13,7 +13,7 @@ app = FastAPI(
 # Настройка CORS для взаимодействия с Frontend (React)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # В продакшене тут указывают конкретный домен, но для лабы оставляем "*"
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -40,7 +40,7 @@ def solve_slae(request: SLAERequest):
         np_solution = np.linalg.solve(np_a, np_b).tolist()
         np_det = float(np.linalg.det(np_a))
 
-        # 3. Формирование итогового ответа для фронтенда
+        # 3. Формирование итогового ответа для фронта
         return {
             "method_results": {
                 "triangular_matrix": gauss_result["triangular_matrix"],
