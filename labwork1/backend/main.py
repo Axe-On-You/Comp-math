@@ -22,25 +22,20 @@ app.add_middleware(
 @app.post("/api/solve")
 def solve_slae(request: SLAERequest):
     try:
-        # 1. Решение нашим написанным методом Гаусса
         solver = GaussSolver(request.matrix_a, request.vector_b)
         gauss_result = solver.solve()
         
-        # Вычисление вектора невязок r = Ax - b
         residuals = solver.get_residuals(
             x_solution=gauss_result["solution"], 
             original_a=request.matrix_a, 
             original_b=request.vector_b
         )
-
-        # 2. Решение встроенной библиотекой NumPy для сравнения результатов
         np_a = np.array(request.matrix_a, dtype=float)
         np_b = np.array(request.vector_b, dtype=float)
         
         np_solution = np.linalg.solve(np_a, np_b).tolist()
         np_det = float(np.linalg.det(np_a))
 
-        # 3. Формирование итогового ответа для фронта
         return {
             "method_results": {
                 "triangular_matrix": gauss_result["triangular_matrix"],
@@ -60,7 +55,6 @@ def solve_slae(request: SLAERequest):
             detail="Матрица вырожденная (определитель равен 0). NumPy не может найти уникальное решение."
         )
     except ValueError as e:
-        # Перехватываем ошибки из нашего solver.py (например, если нет решений)
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Внутренняя ошибка сервера: {str(e)}")
