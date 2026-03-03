@@ -25,3 +25,7 @@ pnpm-debug.log*
 # Сборки и кэш
 .vite/
 .eslintcache
+
+# IDEs
+.vscode/
+.idea/
