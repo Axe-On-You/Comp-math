@@ -3,8 +3,8 @@ import axios from 'axios';
 
 function App() {
   const [n, setN] = useState(3);
-  const [matrixA, setMatrixA] = useState(Array(3).fill(0).map(() => Array(3).fill(0)));
-  const [vectorB, setVectorB] = useState(Array(3).fill(0));
+  const [matrixA, setMatrixA] = useState(Array(3).fill("").map(() => Array(3).fill("0")));
+  const [vectorB, setVectorB] = useState(Array(3).fill("0"));
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -12,16 +12,15 @@ function App() {
   const fileInputRef = useRef(null);
 
   const formatNum = (num) => {
-    if (num === null || num === undefined) return "";
-    const n = Number(num);
-    return n.toString();
+    if (num === null || num === undefined || num === "") return "0";
+    return num.toString();
   };
 
   const handleNChange = (newN) => {
     const value = Math.min(20, Math.max(1, parseInt(newN) || 1));
     setN(value);
-    setMatrixA(Array(value).fill(0).map(() => Array(value).fill(0)));
-    setVectorB(Array(value).fill(0));
+    setMatrixA(Array(value).fill("").map(() => Array(value).fill("0")));
+    setVectorB(Array(value).fill("0"));
     setResult(null);
   };
 
@@ -42,7 +41,7 @@ function App() {
         const newB = [];
 
         for (let i = 0; i < newN; i++) {
-          const row = lines[i + 1].map(Number);
+          const row = lines[i + 1].map(String);
           if (row.length < newN + 1) throw new Error(`В строке ${i + 1} недостаточно данных`);
           newA.push(row.slice(0, newN));
           newB.push(row[newN]);
@@ -63,13 +62,13 @@ function App() {
 
   const handleMatrixChange = (row, col, value) => {
     const newMatrix = matrixA.map((r, i) =>
-      i === row ? r.map((cell, j) => (j === col ? parseFloat(value) || 0 : cell)) : r
+      i === row ? r.map((cell, j) => (j === col ? value : cell)) : r
     );
     setMatrixA(newMatrix);
   };
 
   const handleVectorChange = (index, value) => {
-    const newVector = vectorB.map((val, i) => (i === index ? parseFloat(value) || 0 : val));
+    const newVector = vectorB.map((val, i) => (i === index ? value : val));
     setVectorB(newVector);
   };
 
@@ -79,8 +78,8 @@ function App() {
     try {
       const response = await axios.post('http://127.0.0.1:8000/api/solve', {
         n,
-        matrix_a: matrixA,
-        vector_b: vectorB
+        matrix_a: matrixA.map(row => row.map(val => parseFloat(val) || 0)),
+        vector_b: vectorB.map(val => parseFloat(val) || 0)
       });
       setResult(response.data);
     } catch (err) {
@@ -96,7 +95,7 @@ function App() {
     title: { fontSize: '2.5rem', color: '#1e1b4b', marginBottom: '10px' },
     authorInfo: { textAlign: 'right', fontSize: '0.9rem', color: '#64748b', lineHeight: '1.5', borderRight: '4px solid #6366f1', paddingRight: '15px', marginBottom: '30px' },
     section: { backgroundColor: '#ffffff', padding: '30px', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', marginBottom: '30px' },
-    input: { padding: '8px', border: '1px solid #cbd5e1', borderRadius: '6px', textAlign: 'center', color: '#334155' },
+    input: { padding: '8px', border: '1px solid #cbd5e1', borderRadius: '6px', textAlign: 'center', color: '#334155', outline: 'none' },
     button: { padding: '12px 24px', backgroundColor: '#4f46e5', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', transition: 'background 0.2s', marginRight: '10px' },
     secondaryButton: { padding: '12px 24px', backgroundColor: '#64748b', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: '600' },
     resCard: { padding: '20px', borderRadius: '8px', border: '1px solid #e2e8f0' },
@@ -141,7 +140,7 @@ function App() {
               onClick={() => fileInputRef.current.click()} 
               style={styles.secondaryButton}
             >
-            Загрузить из файла
+              Загрузить из файла
             </button>
           </div>
         </div>
@@ -149,16 +148,16 @@ function App() {
         <div style={{ display: 'flex', gap: '50px', overflowX: 'auto', paddingBottom: '20px' }}>
           <div>
             <h4 style={{marginBottom: '10px', color: '#475569'}}>Матрица коэффициентов A</h4>
-            <div style={{ display: 'grid', gridTemplateColumns: `repeat(${n}, 70px)`, gap: '8px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: `repeat(${n}, 80px)`, gap: '8px' }}>
               {matrixA.map((row, i) => 
                 row.map((cell, j) => (
                   <input 
                     key={`a-${i}-${j}`}
-                    type="number" 
-                    step="any"
+                    type="text"
                     value={cell}
+                    onFocus={(e) => e.target.select()}
                     onChange={(e) => handleMatrixChange(i, j, e.target.value)}
-                    style={{ ...styles.input, width: '70px' }}
+                    style={{ ...styles.input, width: '80px' }}
                   />
                 ))
               )}
@@ -171,11 +170,11 @@ function App() {
               {vectorB.map((val, i) => (
                 <input 
                   key={`b-${i}`}
-                  type="number" 
-                  step="any"
+                  type="text"
                   value={val}
+                  onFocus={(e) => e.target.select()}
                   onChange={(e) => handleVectorChange(i, e.target.value)}
-                  style={{ ...styles.input, width: '70px' }}
+                  style={{ ...styles.input, width: '80px' }}
                 />
               ))}
             </div>
@@ -186,13 +185,12 @@ function App() {
           onClick={solve} 
           disabled={loading}
           style={styles.button}
-          onMouseOver={(e) => e.target.style.backgroundColor = '#4338ca'}
-          onMouseOut={(e) => e.target.style.backgroundColor = '#4f46e5'}
         >
           {loading ? 'Вычисляем...' : 'Рассчитать решение'}
         </button>
       </section>
 
+      {/* Вывод результатов остается прежним */}
       {error && (
         <div style={{ padding: '15px', backgroundColor: '#fef2f2', color: '#b91c1c', borderRadius: '8px', border: '1px solid #fecaca', marginBottom: '20px' }}>
           <strong>Ошибка:</strong> {error}
@@ -202,7 +200,6 @@ function App() {
       {result && (
         <div style={styles.section}>
           <h2 style={{ marginBottom: '25px', color: '#1e1b4b', borderBottom: '2px solid #e2e8f0', paddingBottom: '10px' }}>Результаты вычислений</h2>
-          
           <div style={{ marginBottom: '30px' }}>
             <h4 style={{ color: '#4f46e5' }}>1. Треугольный вид (Прямой ход Гаусса)</h4>
             <div style={{ overflowX: 'auto' }}>
@@ -227,7 +224,6 @@ function App() {
             <div style={{ ...styles.resCard, backgroundColor: '#fff' }}>
               <h4 style={{ color: '#4f46e5', marginTop: 0 }}>2. Метод Гаусса</h4>
               <p><strong>Определитель:</strong> <span style={{color: '#059669'}}>{formatNum(result.method_results.determinant)}</span></p>
-              
               <div style={{ marginTop: '15px' }}>
                 <strong>Вектор неизвестных (X):</strong>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '5px' }}>
@@ -238,7 +234,6 @@ function App() {
                   ))}
                 </div>
               </div>
-
               <div style={{ marginTop: '15px' }}>
                 <strong>Вектор невязок (R):</strong>
                 <div style={{ fontSize: '0.85rem', color: '#64748b', fontStyle: 'italic', marginTop: '5px' }}>
