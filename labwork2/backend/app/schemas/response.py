@@ -20,6 +20,8 @@ class SystemStep(BaseModel):
     y: float
     delta_x: float
     delta_y: float
+    res1: float
+    res2: float
 
 class SystemResponse(BaseModel):
     success: bool
