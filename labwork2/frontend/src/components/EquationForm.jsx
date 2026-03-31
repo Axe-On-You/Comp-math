@@ -25,10 +25,19 @@ export const EquationForm = ({ data, setData }) => (
         <option value="iteration">Метод простой итерации</option>
       </select>
     </div>
-    <div style={{display: 'flex', gap: '10px'}}>
-      <div><label>a:</label><br/><input type="number" style={styles.input} value={data.a} onChange={e => setData({...data, a: parseFloat(e.target.value)})}/></div>
-      <div><label>b:</label><br/><input type="number" style={styles.input} value={data.b} onChange={e => setData({...data, b: parseFloat(e.target.value)})}/></div>
-      <div><label>ε:</label><br/><input type="number" style={styles.input} value={data.epsilon} onChange={e => setData({...data, epsilon: parseFloat(e.target.value)})}/></div>
+    <div style={{ display: 'flex', gap: '15px', gridColumn: '1 / -1' }}>
+      <div>
+        <label>Граница a:</label><br/>
+        <input type="number" style={styles.input} value={data.a} onChange={e => setData({...data, a: parseFloat(e.target.value)})} />
+      </div>
+      <div>
+        <label>Граница b:</label><br/>
+        <input type="number" style={styles.input} value={data.b} onChange={e => setData({...data, b: parseFloat(e.target.value)})} />
+      </div>
+      <div>
+        <label>Точность (ε):</label><br/>
+        <input type="number" step="0.001" style={styles.input} value={data.epsilon} onChange={e => setData({...data, epsilon: parseFloat(e.target.value)})} />
+      </div>
     </div>
   </div>
 );
