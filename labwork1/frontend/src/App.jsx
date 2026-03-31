@@ -223,6 +223,7 @@ function App() {
           <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '30px' }}>
             <div style={{ ...styles.resCard, backgroundColor: '#fff' }}>
               <h4 style={{ color: '#4f46e5', marginTop: 0 }}>2. Метод Гаусса</h4>
+              <p><strong>Перестановки:</strong> <span style={{color: '#059669'}}>{formatNum(result.method_results.swaps)}</span></p>
               <p><strong>Определитель:</strong> <span style={{color: '#059669'}}>{formatNum(result.method_results.determinant)}</span></p>
               <div style={{ marginTop: '15px' }}>
                 <strong>Вектор неизвестных (X):</strong>

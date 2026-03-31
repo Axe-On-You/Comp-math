@@ -30,6 +30,7 @@ class GaussSolver:
         triangular_res = np.column_stack((self.a, self.b)).tolist()
 
         det = np.prod(np.diag(self.a)) * ((-1) ** self.swaps)
+        swaps = self.swaps
 
         # 2. Обратный ход
         x = np.zeros(self.n)
@@ -40,7 +41,8 @@ class GaussSolver:
         return {
             "triangular_matrix": triangular_res,
             "solution": x.tolist(),
-            "determinant": float(det)
+            "determinant": float(det),
+            "swaps": int(swaps)
         }
 
     def get_residuals(self, x_solution, original_a, original_b):

@@ -41,6 +41,7 @@ def solve_slae(request: SLAERequest):
                 "triangular_matrix": gauss_result["triangular_matrix"],
                 "solution": gauss_result["solution"],
                 "determinant": gauss_result["determinant"],
+                "swaps": gauss_result["swaps"],
                 "residuals": residuals
             },
             "library_results": {
