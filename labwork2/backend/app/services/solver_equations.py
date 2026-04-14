@@ -61,7 +61,7 @@ def solve_by_chord(eq_id, a, b, eps):
         delta = abs(x_curr - x_prev)
         steps.append({"k": k, "x": x_curr, "f_x": f(x_curr), "delta": delta})
         
-        if delta < eps:
+        if delta < eps and abs(f(x_curr)) < eps:
             success = True
             res_x = x_curr
             break

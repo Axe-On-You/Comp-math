@@ -59,7 +59,6 @@ async def get_plot_data(
     x_points = np.linspace(plot_a, plot_b, 100)
     y_points = [f(x) for x in x_points]
     
-    # Форматируем в массив объектов для фронтенда (например, для Recharts)
     data = [{"x": round(float(x), 4), "y": round(float(y), 4)} for x, y in zip(x_points, y_points)]
     
     return {"data": data}

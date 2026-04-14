@@ -11,6 +11,7 @@ export const EquationForm = ({ data, setData }) => (
       >
         <option value={1}>x³ - 1.89x² - 2x + 1.76 = 0</option>
         <option value={2}>x³ + 4.81x² - 17.37x + 5.38 = 0</option>
+        <option value={3}>sin(x) - 0.5 = 0</option>
       </select>
     </div>
     <div>
