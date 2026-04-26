@@ -18,6 +18,8 @@ def solve_system_iteration(sys_id, x0, y0, eps):
         
         if q >= 1:
             warnings.append(f"Условие сходимости не выполнено (q = {q:.4f} >= 1). Метод может расходиться.")
+        else:
+            warnings.append(f"Условие сходимости выполнено: q = {q:.4f}, norm1 = {norm1:.4f}, norm2 = {norm2:.4f}")
     except Exception:
         warnings.append("Не удалось рассчитать условие сходимости в начальной точке (возможно, деление на ноль).")
 
